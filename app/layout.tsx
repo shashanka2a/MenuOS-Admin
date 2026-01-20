@@ -11,7 +11,9 @@ export const metadata: Metadata = {
   title: 'MenuOS Admin Dashboard',
   description: 'MenuOS admin dashboard for managing restaurant menus, orders, staff, and tables.',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
   },
   openGraph: {
     title: 'MenuOS Admin Dashboard',
