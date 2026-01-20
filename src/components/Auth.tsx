@@ -5,11 +5,13 @@ import { useTheme } from '../context/ThemeContext';
 interface AuthProps {
   onSignup: () => void;
   onLogin: () => void;
+  initialMode?: 'signup' | 'signin';
+  lockMode?: boolean;
 }
 
-export function Auth({ onSignup, onLogin }: AuthProps) {
+export function Auth({ onSignup, onLogin, initialMode = 'signup', lockMode = false }: AuthProps) {
   const { theme, toggleTheme } = useTheme();
-  const [mode, setMode] = useState<'signup' | 'signin'>('signup');
+  const [mode, setMode] = useState<'signup' | 'signin'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -149,29 +151,31 @@ export function Auth({ onSignup, onLogin }: AuthProps) {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              {mode === 'signup' ? (
-                <>
-                  Already have an account?{' '}
-                  <button
-                    onClick={() => setMode('signin')}
-                    className="text-primary hover:text-[#ff5520] transition-colors font-medium"
-                  >
-                    Sign in
-                  </button>
-                </>
-              ) : (
-                <>
-                  Don&apos;t have an account?{' '}
-                  <button
-                    onClick={() => setMode('signup')}
-                    className="text-primary hover:text-[#ff5520] transition-colors font-medium"
-                  >
-                    Sign up
-                  </button>
-                </>
-              )}
-            </p>
+            {!lockMode && (
+              <p className="text-sm text-muted-foreground">
+                {mode === 'signup' ? (
+                  <>
+                    Already have an account?{' '}
+                    <button
+                      onClick={() => setMode('signin')}
+                      className="text-primary hover:text-[#ff5520] transition-colors font-medium"
+                    >
+                      Sign in
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    Don&apos;t have an account?{' '}
+                    <button
+                      onClick={() => setMode('signup')}
+                      className="text-primary hover:text-[#ff5520] transition-colors font-medium"
+                    >
+                      Sign up
+                    </button>
+                  </>
+                )}
+              </p>
+            )}
           </div>
         </div>
 

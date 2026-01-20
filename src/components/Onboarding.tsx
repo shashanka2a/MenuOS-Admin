@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { ChevronRight, ChevronLeft, Upload, Link as LinkIcon, UtensilsCrossed, Check, Moon, Sun } from 'lucide-react';
+import Link from 'next/link';
 import { useTheme } from '../context/ThemeContext';
 
 interface OnboardingProps {
-  onComplete: () => void;
+  onComplete?: () => void;
 }
 
 interface OnboardingData {
@@ -21,6 +22,7 @@ interface OnboardingData {
 export function Onboarding({ onComplete }: OnboardingProps) {
   const { theme, toggleTheme } = useTheme();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isComplete, setIsComplete] = useState(false);
   const [data, setData] = useState<OnboardingData>({
     restaurantName: '',
     ownerName: '',
@@ -39,7 +41,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
-      onComplete();
+      setIsComplete(true);
+      onComplete?.();
     }
   };
 
@@ -67,6 +70,53 @@ export function Onboarding({ onComplete }: OnboardingProps) {
         return false;
     }
   };
+
+  if (isComplete) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <button
+          onClick={toggleTheme}
+          className="fixed top-4 right-4 p-2 bg-card border border-border rounded-lg hover:bg-muted transition-colors shadow-sm z-50"
+          aria-label="Toggle theme"
+        >
+          {theme === 'light' ? (
+            <Moon className="w-5 h-5 text-foreground" />
+          ) : (
+            <Sun className="w-5 h-5 text-foreground" />
+          )}
+        </button>
+
+        <div className="w-full max-w-lg">
+          <div className="bg-card border border-border rounded-2xl p-8 text-center shadow-sm">
+            <div className="mx-auto mb-6 w-16 h-16 rounded-2xl bg-primary flex items-center justify-center">
+              <Check className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-[28px] font-semibold text-foreground mb-3">
+              Onboarding complete!
+            </h1>
+            <p className="text-muted-foreground mb-4">
+              Our team will reach out to you once your dashboard is ready.
+            </p>
+            <p className="text-sm text-muted-foreground mb-8">
+              We do a one-time professional digitization of your menu to ensure
+              100% accuracy before going live. This usually takes up to 24 hours.
+            </p>
+
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center justify-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-[#ff5520] transition-colors font-medium"
+            >
+              Go to dashboard
+            </Link>
+          </div>
+
+          <div className="mt-8 text-center text-sm text-muted-foreground">
+            <p>© 2025 MenuOS. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
